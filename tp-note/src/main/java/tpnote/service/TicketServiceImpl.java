@@ -22,6 +22,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
     @Autowired
     private UtilisateurRepository utilisateurRepository;
     @Override

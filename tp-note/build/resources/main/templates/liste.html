@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste de tickets</title>
+</head>
+<body>
+<ul>
+    <li th:each="c : ${listeTicket}" th:text="${c}.description">un ticket...</li>
+</ul>
+
+</body>
+</html>

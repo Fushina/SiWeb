@@ -1,10 +1,15 @@
 package tpnote.control;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import tpnote.repository.TicketRepository;
+import tpnote.service.ConnexionService;
+import tpnote.service.TicketService;
+import tpnote.service.TicketServiceImpl;
 
 
 /**
@@ -13,21 +18,38 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class TicketControle {
-
+    @Autowired
+    TicketService tsi;
+    @Autowired
+    ConnexionService connexionService;
    
     @GetMapping("/ticket/creer")
     public String creerTicketForm() {
-        return null;
+        if(connexionService.estConnecte()){
+        return "creerTicket";
+        }
+        else
+        {
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/ticket/creer")
     public String postTicketForm(String description) {
-        return null;
+        tsi.creerTicket(connexionService.getUtilisateur().getLogin(),description);
+        return "redirect:/";
     }
 
     @GetMapping("/ticket/liste")
     public String listeTickets(Model model) {
-        return null;
+        if(connexionService.estAdmin()) {
+            model.addAttribute("listeTicket", tsi.listeTickets());
+            return "liste";
+        }
+        else
+        {
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/ticket/gerer/{id}")
