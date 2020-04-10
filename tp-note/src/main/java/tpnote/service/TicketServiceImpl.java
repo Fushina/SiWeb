@@ -19,29 +19,74 @@ import tpnote.repository.UtilisateurRepository;
 @Service
 @Transactional
 public class TicketServiceImpl implements TicketService {
-  
+
+    @Autowired
+    private TicketRepository ticketRepository;
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
     @Override
-    public TicketDTO creerTicket(String createurLogin, String description) {      
-        return null;
+    public TicketDTO creerTicket(String createurLogin, String description) {
+        if(createurLogin==null)
+        {
+            throw  new TicketException();
+        }
+        Utilisateur utilisateur =utilisateurRepository.findByLogin(createurLogin);
+
+        Ticket t= new Ticket(description,LocalDate.now(),utilisateur);
+        ticketRepository.save(t);
+        return new TicketDTO(t.getId(),t.getDescription(),t.getCreationDate(), utilisateur.getLogin(),null);
+    }
+    private static TicketDTO buildDTO(Ticket a) {
+
+        return new TicketDTO(a.getId(), a.getDescription(), a.getCreationDate(), a.getCreateur().getLogin(), a.getResponsable().getLogin());
     }
 
     @Override
     public List<TicketDTO> listeTickets() {
-        return null;
+        List<Ticket> mesTickets=ticketRepository.findAll();
+        List<TicketDTO>mesTicketsDTO= new ArrayList<>();
+        for(Ticket t:mesTickets)
+        {
+            mesTicketsDTO.add(new TicketDTO(t.getId(),t.getDescription(),t.getCreationDate(),t.getCreateur().getLogin(),null));
+        }
+        return mesTicketsDTO;
     }
 
     @Override
     public TicketDTO trouverTicket(Long id) {
-        return null;
+        Ticket t=ticketRepository.findById(id).get();
+        Utilisateur u=t.getResponsable();
+        String s=null;
+        if(t.getResponsable()!=null)
+        {
+            s=t.getResponsable().getLogin();
+        }
+        TicketDTO tdto=new TicketDTO(t.getId(),t.getDescription(),t.getCreationDate(),t.getCreateur().getLogin(),s);
+        return tdto;
     }
 
     @Override
     public List<String> listeUtilisateurs() {
-        return null;
+        List<Utilisateur> listUtilisateur=utilisateurRepository.findAll();
+        List<String> listString= new ArrayList<>();
+        for(Utilisateur u:listUtilisateur)
+        {
+            listString.add(u.getLogin());
+        }
+        return listString;
     }
 
-    @Override
+  @Override
     public void assigner(Long ticketId, String responsable) {
+        Ticket t = ticketRepository.findById(ticketId).get();
+        Utilisateur res= utilisateurRepository.findByLogin(responsable);
+        t.setResponsable(res);
+        if(res==null || t==null)
+        {
+            throw  new TicketException();
+        }
+
+        ticketRepository.save(t);
         
     }
 }

@@ -62,11 +62,12 @@ public class TicketServiceTest {
         assertEquals("tech2", dto1.getResponsable());
     }
 
+
     @Test
     public void testAssignationNonTrouvee() {
         assertThrows(TicketException.class, () -> {
             TicketDTO dto = service.creerTicket("tech1", "un ticket");
-            service.assigner(dto.getId(), "tech2");
+            service.assigner(dto.getId(), "tech3");
         });
     }
 

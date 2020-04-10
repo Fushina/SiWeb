@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <span th:if="${utilisateur != null}">[[${utilisateur.login}]]
+            <form action="#" th:action="@{/deconnecter}" method="POST">
+                <button>déconnecter</button>
+            </form>
+        </span>
+        <span th:if="${utilisateur == null}">
+            <form action="#" th:action="@{/connecter}" method="POST">
+                <input type="text" name="login" /> <button>connecter</button>
+            </form>
+        </span>
+    </header>
+
+    <h1>Menu</h1>    
+
+    <h2>Tout utilisateur connecté</h2>
+
+    <ul>
+        <li><a th:href="@{/ticket/creer}">Créer un ticket</a></li>
+    </ul>
+
+    <h2>Administrateurs</h2>
+    <ul>
+        <li><a th:href="@{/ticket/liste}">Liste des tickets</a></li>
+    </ul>
+</body>
+</html>
