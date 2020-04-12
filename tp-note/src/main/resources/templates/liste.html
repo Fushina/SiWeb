@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Liste de tickets</title>
 </head>
 <body>
-<ul>
-    <li th:each="c : ${listeTicket}" th:text="${c.description}" th:href=""></li>
+<ul th:each="c : ${listeTicket}">
+    <li ><p th:text="${c.description}"></p><a th:href="@{/ticket/gerer/{id}(id=${c.id})}">gérer</a></li>
 </ul>
 
 </body>

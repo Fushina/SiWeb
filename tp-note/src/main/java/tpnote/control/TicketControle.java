@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import tpnote.dto.TicketDTO;
+import tpnote.model.Ticket;
 import tpnote.repository.TicketRepository;
 import tpnote.service.ConnexionService;
 import tpnote.service.TicketService;
@@ -54,12 +56,20 @@ public class TicketControle {
 
     @GetMapping("/ticket/gerer/{id}")
     public String getGererTicket(@PathVariable("id") Long id, Model model) {
-        return null;        
+        TicketDTO ticketDTO=tsi.trouverTicket(id);
+        model.addAttribute("gererTicket",ticketDTO);
+        return "gererTicket";
     }
 
     @PostMapping("/ticket/assigner")
     public String assigner(Long id, String responsable, Model model) {
-        return null;
+        tsi.assigner(id,responsable);
+        TicketDTO tdto= tsi.trouverTicket(id);
+        if(tdto.getResponsable()==null)
+        {
+            return "erreurAssignation";
+        }
+        return  "redirect:/";
     }
 
 }
